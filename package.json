@@ -3,30 +3,53 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node app.js",
     "serve": "vue-cli-service serve",
+    "dev": "concurrently \"vue-cli-service serve\" \"node app.js\" ",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build-dev": "vue-cli-service build --mode dev",
+    "build-prod": "vue-cli-service build --mode prod",
+    "build-test": "vue-cli-service build --mode test"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "element-ui": "^2.13.2",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "sequelize": "^6.3.5",
+    "sequelize-auto": "^0.6.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "xss": "^1.0.8"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.11.5",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-prettier": "^6.0.0",
+    "axios": "^0.20.0",
     "babel-eslint": "^10.1.0",
+    "babel-polyfill": "^6.26.0",
+    "compression-webpack-plugin": "^6.0.2",
+    "concurrently": "^5.3.0",
+    "echarts": "^4.9.0",
+    "element-theme-chalk": "^2.13.2",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
+    "image-webpack-loader": "^7.0.1",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
+    "sass-loader": "^10.0.2",
     "vue-template-compiler": "^2.6.11"
   }
 }

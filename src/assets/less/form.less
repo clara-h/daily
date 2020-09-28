@@ -1,0 +1,104 @@
+//新增的 form
+.ruleForm {
+  .two-item-line {
+    .el-form-item__content {
+      display: flex;
+    }
+  }
+}
+
+// 新增的 form 里面的子项
+.el-form-item__content {
+  text-align: left;
+  width: 300px;
+  .el-select {
+    width: 100%;
+  }
+}
+
+.full-line {
+  & > .el-form-item__content {
+    width: 600px;
+  }
+}
+
+//查询条件的 form
+.form-inline {
+  .el-form-item {
+    width: 48%;
+    .el-form-item__content {
+      width: 60%;
+    }
+  }
+  .el-col .el-form-item {
+    width: 100%;
+  }
+  .el-col .el-form-item__content {
+    width: 100%;
+  }
+  .full-line {
+    width: 100%;
+    .el-form-item__content {
+      width: 80%;
+      .el-date-editor--daterange {
+        width: 350px;
+      }
+    }
+  }
+  //联动嵌套表单特殊设置
+  .linkage-form-item {
+    width: 100%;
+    .el-form-item__content {
+      width: 100%;
+    }
+  }
+  /*排除巡查时间类型对齐*/
+  .full-line_time {
+    margin-left: 0px !important;
+  }
+}
+
+.search-select {
+  width: 100px;
+  margin-left: 10px;
+  display: inline-block;
+  .el-input__inner {
+  }
+}
+
+.el-dialog {
+  border-radius: 6px;
+  .el-dialog__header {
+    //border-bottom: 1px solid #e9eaec;
+    .el-dialog__title {
+      height: 20px;
+      line-height: 20px;
+      font-size: 14px;
+      color: #1c2438;
+      font-weight: 700;
+    }
+  }
+  .el-dialog__footer {
+    //border-top: 1px solid #e9eaec;
+  }
+}
+
+.el-date-editor--daterange.el-input__inner {
+  width: 220px;
+}
+
+.el-input-template {
+  width:25px;text-align:center;line-height: 26px;padding: 0px 10px;border: 1px solid #e0e0e0;border-left:0px;background: #f5f7fa;border-radius: 0 4px 4px 0px;color: #909399;
+}
+
+/*reset form disabled style*/
+.el-input.is-disabled .el-input__inner, .el-cascader.is-disabled .el-cascader__label, .el-textarea.is-disabled .el-textarea__inner {
+  color: #606266;
+}
+.el-cascader.is-disabled .el-cascader__label {
+  cursor: not-allowed;
+}
+//统计分析查询表单，区域多选只可多选同一级这个组件如果不设置 dss-card 的 overflow,会部分不显示
+.el-card.mb12.dss-card {
+  overflow: unset;
+}

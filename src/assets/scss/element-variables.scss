@@ -1,0 +1,33 @@
+@import './variable';
+
+// $--border-color-base: #d2d2d6;
+$--border-color-hover: $theme;
+
+$--color-primary: $theme;
+$--color-danger: $danger;
+$--color-success: $success;
+$--color-warning: $warning;
+$--color-extra-light-silver: $disable-color;
+
+$--font-size-base: 14px;
+
+/* Button */
+$--button-disabled-color: #cccccc;
+$--button-disabled-border: $border-color;
+$--button-default-border: $border-color;
+$--button-primary-border: $primary;
+$--button-primary-fill: $primary;
+$--button-success-border: $success;
+$--button-success-fill: $success;
+$--button-warning-border: $warning;
+$--button-warning-fill: $warning;
+$--button-danger-border: $danger;
+$--button-danger-fill: $danger;
+$--button-info-border: $info;
+$--button-info-fill: $info;
+
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import '../../../node_modules/element-ui/packages/theme-chalk/src/index';

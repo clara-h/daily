@@ -1,0 +1,163 @@
+html,body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, blockquote, th, td,p {
+  margin:0;
+  padding:0;
+}
+
+i,em{ text-decoration:none; font-style:normal;}
+
+body{
+  scrollbar-face-color: #f6f6f6;
+  scrollbar-highlight-color: #ffffff;
+  scrollbar-shadow-color: #cccccc;
+  scrollbar-3dlight-color: #cccccc;
+  scrollbar-arrow-color: #330000;
+  scrollbar-track-color: #f6f6f6;
+  font-family:'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size:12px;
+
+}
+
+a{ text-decoration:none; cursor:pointer;}
+
+table {border-collapse:collapse;border-spacing:0;}
+
+img {border:0;}
+
+li {list-style:none;}
+
+sup {vertical-align:text-top;}
+
+sub {vertical-align:text-bottom;}
+
+input, textarea, select {font-family:inherit;font-size:inherit;font-weight:inherit;}
+
+/*input{ text-indent:6px;}*/
+
+/*带清除高度的10PX高的空DIV*/
+.blank{clear:both;height:10px;overflow:hidden;font-size:0px;}
+.blank1{clear:both;height:5px;overflow:hidden;font-size:0px;}
+
+/*单行隐藏*/
+.str{white-space:nowrap;word-break:keep-all;overflow:hidden;text-overflow:ellipsis;}
+
+/*多行隐藏*/
+.strmore{overflow:hidden;text-overflow:ellipsis;}
+
+/*带清除高度的0PX高的空DIV*/
+.cls{clear:both;height:0px;overflow:hidden;background:#FFF;}
+
+/*清楚右边边框*/
+.right_border{ border-right:none;}
+
+/**边距**/
+.margin_top{ margin-top:20px;}
+.margin_top10{ margin-top:10px;}
+.margin_top20{ margin-top: 20px;}
+.margin{ margin:20px !important;}
+.margin_r_no{ margin-right:0;}
+.margin_l_no{ margin-left:0;}
+.margin_10{ margin:0 10px;}
+.margin-lr20{ margin: 0 20px;}
+.margin-bot-n0{ margin-bottom: 0 !important;}
+
+
+.padding{ padding: 20px !important;}
+.no-padding{ padding:0 !important; }
+.no-margin{ margin:0 !important; }
+.padding-r10{ padding-right:10px !important; }
+
+.textareaRsize{ resize:none;}
+
+/*英文数字自动换行*/
+.strshow{outline: none; white-space: normal; word-break: break-all;overflow:hidden;text-overflow:ellipsis;}
+
+/*文字居中*/
+.textCenter{ text-align:center;}
+.textRight{ text-align: right;}
+.textLeft{ text-align: left;}
+
+/* float */
+.fl { float: left; display: inline; }
+.fr { float: right; display: inline; }
+.clearfix { zoom: 1; }
+.clearfix:after { display: block; visibility: hidden; width: 0; height: 0; line-height: 0; font-size: 0; clear: both; content: "."; }
+.clean { clear: both; height: 0; font-size: 1px; line-height: 0; overflow: hidden; }
+
+/**投影**/
+.border-shower{ box-shadow: 0 0 2px rgba(0,0,0,0.2); border-radius: 2px;}
+
+/**字体**/
+.font-size12{ font-size: 14px !important;}
+.font-size14{ font-size: 14px !important;}
+.font-size16{ font-size: 16px !important;}
+.font-blod{ font-weight: 700 !important;}
+.txt-center{ text-align: center !important;}
+
+/**暂无数据**/
+.no-data{ padding: 30px 20px;}
+.no-data img{ display: block; margin: auto;}
+.no-data h3{ text-align: center; margin-top: 20px; color: #666; font-size: 18px;}
+
+/**提示**/
+.base-alert{ padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;}
+.base-alert-success{ color: #3c763d; background-color: #dff0d8; border-color: #d6e9c6;}
+.base-alert-info {color: #31708f;background-color: #d9edf7;border-color: #bce8f1;}
+.base-alert-warning{ color: #8a6d3b;background-color: #fcf8e3;border-color: #faebcc;}
+.base-alert-danger { color: #a94442;background-color: #f2dede;border-color: #ebccd1;}
+
+
+/**标签**/
+.h-label{display: inline;padding: .2em .6em .3em;font-size: 75%; line-height: 1;color: #fff;text-align: center;white-space: nowrap;vertical-align: baseline;border-radius: .25em;}
+.h-label-default{background-color: #777;}
+.h-label-primary{background-color: #337ab7;}
+.h-label-success{background-color: #5cb85c;}
+.h-label-info{background-color: #5bc0de;}
+.h-label-warning{background-color: #f0ad4e;}
+.h-label-danger{background-color: #d9534f;}
+
+.h-tag{background-color: rgba(64,158,255,.1);display: inline-block;padding: 0 10px;height: 32px;line-height: 30px;font-size: 12px;color: #409eff;border-radius: 4px;box-sizing: border-box;border: 1px solid rgba(64,158,255,.2);white-space: nowrap;}
+.h-tag-success{background-color: rgba(103,194,58,.1);border-color: rgba(103,194,58,.2);color: #67c23a;}
+.h-tag-info{background-color: rgba(144,147,153,.1);border-color: rgba(144,147,153,.2);color: #909399;}
+.h-tag-warning{background-color: rgba(230,162,60,.1);border-color: rgba(230,162,60,.2);color: #e6a23c;}
+.h-tag-danger{background-color: rgba(245,108,108,.1);border-color: rgba(245,108,108,.2);color: #f56c6c;}
+.h-tag .h-icon-close{border-radius: 50%;text-align: center;position: relative;cursor: pointer;font-size: 12px;height: 16px;width: 16px;line-height: 16px;vertical-align: middle;top: -1px;right: -5px;color: #409eff;}
+.h-tag-success .h-tag-close{color: #67c23a;}
+.h-tag-info .h-tag-close{color: #909399;}
+.h-tag-warning .h-tag-close{color: #e6a23c;}
+.el-tag-danger .h-tag-close{color: #f56c6c;}
+
+.h-tag-medium{height: 28px;line-height: 26px;}/**中等**/
+.h-tag-small{height: 24px;padding: 0 8px;line-height: 22px;}/**小型**/
+.h-tag-mini{height: 20px;padding: 0 5px;line-height: 19px;}/**超小**/
+
+/*===================等待=================*/
+/**
+.wait_div {position:absolute; background:#FFF url('loading.gif') no-repeat 5px center; height:40px; line-height:40px; text-align: left; text-indent:45px; top:40%; left:50%; z-index:9999; border:1px solid #C1C1C1; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding-right: 30px;}
+*/
+.wait_div {position:absolute; background: #000;  width:200px; height:80px; line-height:117px; text-align: center; top:40%; left:50%; z-index:9999; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;  color:#fff; filter:alpha(opacity=70);   -moz-opacity:0.7;  -khtml-opacity: 0.7;   opacity: 0.7;   }
+.wait_div img{border: 0; display: block; width: 130px; margin-top: -11px; margin-left: -20px;}
+.wait_div p{text-align: center; font-size: 12px; color:  #fff; margin-top: -104px; margin-left: 60px;}
+
+/*验证样式*/
+
+/**隐藏**/
+.hide{ display:none !important;}
+.show{ display: block;}
+
+.border-bottom{ border-bottom: 1px solid #ccc;}
+
+
+/**字体颜色**/
+.blue-color{ color:#1E9FFF !important; }
+.red-color{ color:#FF5722 !important; }
+.green-color{ color:#67c23a !important; }
+.gray-color{ color:#c2c2c2 !important; }
+.orange-color{ color: #fdcf2c !important;}
+
+
+/**背景颜色**/
+.blue-bg{ background-color: #1E9FFF !important;}
+.red-bg{ background-color: #FF5722 !important;}
+.orange-bg{ background-color: #fdcf2c !important;}
+.green-bg{ background-color: #009688 !important;}
+.cyan-bg{ background-color: #2F4056 !important;}
