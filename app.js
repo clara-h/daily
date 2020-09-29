@@ -37,47 +37,44 @@ app.all("*", function(req, res, next) {
 
 /* 监听端口 */
 app.listen(8080, () => {
-  console.log('——————————服务已启动——————————');
+  console.log("——————————服务已启动——————————");
 });
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send('<p style="color:red">服务已启动</p>');
 });
 
-app.get("/api/getUserList", (req, res,next) => {
-  // 获取前台页面传过来的参数
-  var param = req.query || req.params;
-  var name = param.name;
-  var _res = res;
-  const sqlStr = "SELECT * FROM user";
-  conn.query(sqlStr, (err, res, result) => {
-    var isTrue = false;
-    if(res){ //获取用户列表，循环遍历判断当前用户是否存在
-      for (var i=0;i<res.length;i++) {
-        if(res[i].uid == UserName && res[i].userName == Password) {
-          isTrue = true;
+app.post("/login", bodyParser.json(),(req, res) => {
+  //var param = req.query || req.params|| req.body ;
+  var name = req.body.name;
+  var pwd = req.body.pwd;
+  var sql = "select * from user where name = '" + name + "'";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    if (err) {
+      data.msg = err.message;
+      console.log("err:", err.message);
+      //res.end(data);
+    } else {
+      var isTrue = false;
+      data.code = 202;
+      data.msg = "用户名不存在!";
+      if (result) {//获取用户列表，循环遍历判断当前用户是否存在
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].name == name && result[i].pwd == pwd ) {
+            isTrue = true;
+          } else {
+            data.msg = "密码错误！";
+          }
         }
       }
-    }
-    var data = {};
-    data.isLogin = isTrue; //如果isTrue布尔值为true则登陆成功 有false则失败
-    if(isTrue) {
-      data.userInfo = {};
-      data.userInfo.id = id;
-      data.userInfo.name = name;
-    } //登录成功返回用户信息
-    if(result) {
-      result = {
-        code: 200,
-        msg: "succeed"
-      };
-      data.result = result;
-    }
-    if(err) data.err = err;
-    // 以json形式，把操作结果返回给前台页面
-    responseJSON(_res, data);
 
-    // 释放链接
-    conn.release();
+      if (isTrue) {
+        data.code = 200;
+        data.msg = "登录成功！ ";
+        data.result = result;
+      }
+    }
+    res.json(data);
   });
-})
+});

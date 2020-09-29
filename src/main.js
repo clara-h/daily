@@ -9,10 +9,29 @@ import Vuex from "vuex";
 import store from "./store";
 Vue.use(Vuex);
 
+// axios请求
+import axios from "axios"
+Vue.prototype.$axios = axios;
+
 // element样式框架
 import ElementUI from "element-ui";
 //import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
+
+//引入 common.js
+import common from "./utils/common.js";
+Vue.use(common);
+
+//引入 utls.js
+import {domain} from './utils/utls.js'
+
+//配置axios
+//->1,模块一接口,url地址
+axios.defaults.baseM1URL = domain.Base_M1_URL;
+//->2,模块二接口,url地址
+axios.defaults.baseM2URL = domain.Base_M2_URL;
+//->3,模块三接口,url地址
+axios.defaults.baseM3URL = domain.Base_M3_URL;
 
 import "@/assets/scss/element-variables.scss";
 import "@/assets/less/base.less";
