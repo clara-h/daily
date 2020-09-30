@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # daily
 
 ## Project setup
@@ -25,4 +25,3 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 =======
 # daily
->>>>>>> 9849ea1becde8502887859a02e035560691c2c26
