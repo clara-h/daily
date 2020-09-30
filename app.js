@@ -44,11 +44,49 @@ app.get("/", (req, res) => {
   res.send('<p style="color:red">服务已启动</p>');
 });
 
+//登录
 app.post("/login", bodyParser.json(),(req, res) => {
   //var param = req.query || req.params|| req.body ;
   var name = req.body.name;
   var pwd = req.body.pwd;
   var sql = "select * from user where name = '" + name + "'";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    if (err) {
+      data.msg = err.message;
+      console.log("err:", err.message);
+      //res.end(data);
+    } else {
+      var isTrue = false;
+      data.code = 202;
+      data.msg = "用户名不存在!";
+      if (result) {//获取用户列表，循环遍历判断当前用户是否存在
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].name == name && result[i].pwd == pwd ) {
+            isTrue = true;
+          } else {
+            data.msg = "密码错误！";
+          }
+        }
+      }
+
+      if (isTrue) {
+        data.code = 200;
+        data.msg = "登录成功！ ";
+        data.result = result;
+      }
+    }
+    res.json(data);
+  });
+});
+
+//注册
+app.post("/register", bodyParser.json(),(req, res) => {
+  //var param = req.query || req.params|| req.body ;
+  var name = req.body.name;
+  var pwd = req.body.pwd;
+  var time = req.body.time;
+  var sql = "INSERT INTO user ( name, pwd, time) VALUES ( '" + name + "' , '" + pwd +"', '" + time + "'";
   conn.query(sql, function (err, result) {
     var data = {};
     if (err) {

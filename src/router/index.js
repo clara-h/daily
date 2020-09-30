@@ -16,12 +16,13 @@ const router = new Router({
   routes
 });
 
+//导航守卫
 router.beforeEach((to,from,next) => {
   //如果用户访问的登录页面或注册页面，直接放行
   if (to.path === "/login" || to.path === "/register") return next();
   //从 sessionStorage 中获取到保存的信息
-  console.log(window.sessionStorage);
-  console.log(window.sessionStorage.getItem("vuex"));
+  //console.log(window.sessionStorage);
+  //console.log(window.sessionStorage.getItem("vuex"));
   const userId = window.sessionStorage.getItem("vuex");
   //没有则强制跳转到登录页面
   if (!userId) return next("/login");
