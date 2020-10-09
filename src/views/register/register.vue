@@ -31,29 +31,29 @@ export default {
   name: "register",
   data() {
     var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
+      if (value === "") {
+        callback(new Error("请输入密码"));
       } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
+        if (this.signForm.repwd !== "") {
+          this.$refs.signForm.validateField("repwd");
         }
         callback();
       }
     };
     var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.signForm.pwd) {
+        callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
       }
     };
     return {
       signForm: {
-        name:"",
-        pwd:"",
-        repwd:"",
+        name: "",
+        pwd: "",
+        repwd: "",
       },
       rules: {
         name: [
@@ -68,7 +68,7 @@ export default {
         repwd: [
           { required: true, message: "请重复密码", trigger: "blur" },
           { validator: validatePass2, trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -76,7 +76,36 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          let nowDate = new Date()
+          let date = {
+            year: nowDate.getFullYear(),
+            month: nowDate.getMonth() + 1,
+            date: nowDate.getDate()
+          }
+          //this.systemTime = date.year + '-' + date.month + '-' + date.date
+          let th = this;
+          let url = "/register";
+          let params = {
+            name: this.signForm.name,
+            pwd: this.signForm.pwd,
+            time: date.year + '-' + date.month + '-' + date.date,
+          };
+          //->调用第一个接口的请求服务
+          //debugger;
+          this.reqM1Service(url, params).then(
+            res => {
+              if(res.code === 200){
+                //console.log(res);
+                //th.$store.commit("edit",res.result[0])
+                //console.log(res.result[0]);
+                //console.log(th.$store.state.login);
+                th.$message.success(res.msg);
+                th.$router.push({ name:"login" });
+              } else {
+                th.$message.error(res.msg);
+              }
+            })
+            .catch(failResponse => {});
         } else {
           console.log("error submit!!");
           return false;

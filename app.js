@@ -36,7 +36,7 @@ app.all("*", function(req, res, next) {
 
 
 /* 监听端口 */
-app.listen(8080, () => {
+app.listen(8000, () => {
   console.log("——————————服务已启动——————————");
 });
 
@@ -82,37 +82,31 @@ app.post("/login", bodyParser.json(),(req, res) => {
 
 //注册
 app.post("/register", bodyParser.json(),(req, res) => {
-  //var param = req.query || req.params|| req.body ;
+  //var param = req.body || req.query || req.params  ;
   var name = req.body.name;
   var pwd = req.body.pwd;
   var time = req.body.time;
-  var sql = "INSERT INTO user ( name, pwd, time) VALUES ( '" + name + "' , '" + pwd +"', '" + time + "'";
+  var sql = "insert into user ( name, pwd, time) select '" + name + "' , '" + pwd +"', '" + time + "' from dual where not exists ( select * from user where name = '"+name+"')";
   conn.query(sql, function (err, result) {
     var data = {};
+    //data.sql = sql;
     if (err) {
       data.msg = err.message;
-      console.log("err:", err.message);
-      //res.end(data);
-    } else {
-      var isTrue = false;
       data.code = 202;
-      data.msg = "用户名不存在!";
-      if (result) {//获取用户列表，循环遍历判断当前用户是否存在
-        for (var i = 0; i < result.length; i++) {
-          if (result[i].name == name && result[i].pwd == pwd ) {
-            isTrue = true;
-          } else {
-            data.msg = "密码错误！";
-          }
-        }
-      }
-
-      if (isTrue) {
+      console.log("err:", err.message);
+    } else {
+      data.id=result.insertId;
+      if (result.insertId !==0){
         data.code = 200;
-        data.msg = "登录成功！ ";
-        data.result = result;
+        data.msg="注册成功！"
+      }else{
+        data.code = 202;
+        data.msg="用户名已存在！"
       }
+      data.result = result;
     }
     res.json(data);
   });
+
+
 });
