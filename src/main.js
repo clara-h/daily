@@ -25,7 +25,16 @@ Vue.use(common);
 //引入 utls.js
 import {domain} from './utils/utls.js'
 
-//配置axios
+import glSvgIcon from '@/components/common/glSvgIcon/glSvgIcon' // svg组件
+// 注册为全局组件
+
+// register globally
+Vue.component('glSvgIcon', glSvgIcon);
+const req = require.context('./assets/icon/svg', false, /\.svg$/);
+const requireAll = requireContext => requireContext.keys().map(requireContext);
+requireAll(req);
+
+//配置axiosicons/
 //->1,模块一接口,url地址
 axios.defaults.baseM1URL = domain.Base_M1_URL;
 //->2,模块二接口,url地址

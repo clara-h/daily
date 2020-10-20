@@ -1,5 +1,6 @@
 // vue.config.js
 const path = require("path");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const CompressionWebpackPlugin = require("compression-webpack-plugin"); // 开启gzip压缩， 按需引用
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i; // 开启gzip压缩， 按需写入
@@ -16,74 +17,40 @@ module.exports = {
   runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
   productionSourceMap: !IS_PROD, // 生产环境的 source map
   parallel: require("os").cpus().length > 1, // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
-  pwa: {}, // 向 PWA 插件传递选项。
+  configureWebpack: {
+    performance: {
+      hints: false,
+    },
+  },
   chainWebpack: config => {
-    config.resolve.symlinks(true); // 修复热更新失效
-    // 如果使用多页面打包，使用vue inspect --plugins查看html是否在结果数组中
-    config.plugin("html").tap(args => {
-      // 修复 Lazy loading routes Error
-      args[0].chunksSortMode = "none";
-      return args;
-    });
-    config.resolve.alias // 添加别名
-      .set("@", resolve("src"))
-      .set("@assets", resolve("src/assets"))
-      .set("@components", resolve("src/components"))
-      .set("@views", resolve("src/views"))
-      .set("@store", resolve("src/store"));
-    // 压缩图片
-    // 需要 npm i -D image-webpack-loader
-    /*config.module
-      .rule("images")
-      .use("image-webpack-loader")
-      .loader("image-webpack-loader")
+    // 移除 prefetch 插件
+    /*config.plugins.delete('prefetch')
+    config.plugins.delete('preload')*/
+
+    // 设置 svg-sprite-loader
+
+    const svgRule = config.module.rule('svg');
+    // 清除已有的所有 loader。
+    // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
+    svgRule.uses.clear();
+    svgRule
+      .test(/\.svg$/)
+      .include.add(path.resolve(__dirname, './src/assets/icon/svg'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
       .options({
-        mozjpeg: { progressive: true, quality: 65 },
-        optipng: { enabled: false },
-        pngquant: { quality: [0.65, 0.9], speed: 4 },
-        gifsicle: { interlaced: false },
-        webp: { quality: 75 }
-      });*/
-    // 打包分析
-    // 打包之后自动生成一个名叫report.html文件(可忽视)
-    if (IS_PROD) {
-      config.plugin("webpack-report").use(BundleAnalyzerPlugin, [
-        {
-          analyzerMode: "static"
-        }
-      ]);
-    }
+        symbolId: 'icon-[name]'
+      });
+    const fileRule = config.module.rule('file');
+    fileRule.uses.clear();
+    fileRule
+      .test(/\.svg$/)
+      .exclude.add(path.resolve(__dirname, './src/assets/icon/svg'))
+      .end()
+      .use('file-loader')
+      .loader('file-loader');
   },
-  configureWebpack: config => {
-    // 开启 gzip 压缩
-    // 需要 npm i -D compression-webpack-plugin
-    const plugins = [];
-    if (IS_PROD) {
-      plugins.push(
-        new CompressionWebpackPlugin({
-          filename: "[path].gz[query]",
-          algorithm: "gzip",
-          test: productionGzipExtensions,
-          threshold: 10240,
-          minRatio: 0.8
-        })
-      );
-    }
-    config.plugins = [...config.plugins, ...plugins];
-  },
-  // css: {
-  //   extract: IS_PROD,
-  //   requireModuleExtension: false, // 去掉文件名中的 .module
-  //   loaderOptions: {
-  //     // 给 less-loader 传递 Less.js 相关选项
-  //     less: {
-  //       // `globalVars` 定义全局对象，可加入全局变量
-  //       globalVars: {
-  //         primary: "#333"
-  //       }
-  //     }
-  //   }
-  // },
   devServer: {
     overlay: {
       // 让浏览器 overlay 同时显示警告和错误

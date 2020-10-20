@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-main">
-      <h2 class="login-tit">消费统计</h2>
+      <h2 class="login-tit">LOGO</h2>
       <div class="login-form">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px">
           <el-form-item label="用户名" prop="name">
