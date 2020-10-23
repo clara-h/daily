@@ -3,7 +3,11 @@
     <div class="cost-logo">LOGO</div>
     <!--nav-->
     <div class="head-nav">
-      <a v-for="item in navList" :key="item.id " class="nav">
+      <a v-for="item in navList"
+         :key="item.id "
+         class="nav"
+         :class="{'active': (item.id === activeIndex )}"
+          @click="navClick(item.id,item)">
         <glSvgIcon class="head-icon" :iconClass="item.icon" />
         {{item.name}}
       </a>
@@ -16,28 +20,44 @@
     name: "homeHead",
     data(){
       return {
+        activeIndex:this.$store.state.headActive,
         navList: [
           {
             id: '1',
             name: '类型',
-            icon: 'type'
+            icon: 'type',
+            path: 'type'
           },
           {
             id: '2',
             name: '分类',
-            icon: 'class'
+            icon: 'class',
+            path: 'class'
           },
           {
             id: '3',
             name: '个人中心',
-            icon: 'person'
+            icon: 'person',
+            path: 'personCenter'
           },
           {
             id: '4',
             name: '退出',
-            icon: 'exit'
+            icon: 'exit',
+            path: 'login'
           },
         ]
+      }
+    },
+    methods: {
+      navClick(id,item) {
+        this.$store.commit("editHead",id)
+        this.activeIndex = this.$store.state.headActive;
+        this.$router.push({name:item.path})
+        if(id==='4') {
+          this.$store.commit("edit",'')
+          window.sessionStorage.clear()
+        }
       }
     }
   }
@@ -71,6 +91,9 @@
       }
     }
     .nav:hover{
+      opacity: 1;
+    }
+    .active{
       opacity: 1;
     }
   }

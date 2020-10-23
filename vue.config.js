@@ -28,7 +28,6 @@ module.exports = {
     config.plugins.delete('preload')*/
 
     // 设置 svg-sprite-loader
-
     const svgRule = config.module.rule('svg');
     // 清除已有的所有 loader。
     // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。

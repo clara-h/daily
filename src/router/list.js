@@ -30,29 +30,4 @@ export default [
     name: "login",
     component: login
   },
-  // {
-  //   path: '/entry',
-  //   name: 'entry',
-  //   component: entry,
-  // },
-  // {
-  //   path: '/locking',
-  //   name: 'locking',
-  //   component: locking,
-  // },
-  // {
-  //   path: '/icons',
-  //   name: 'icons',
-  //   component: iconList
-  // },
-  // {
-  //   path: '/formDemo',
-  //   name: 'formDemo',
-  //   component: formDemo
-  // },
-  // {
-  //   path: '/gameCreate',
-  //   name: 'gameCreate',
-  //   component: gameCreate
-  // }
 ]

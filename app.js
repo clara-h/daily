@@ -72,7 +72,7 @@ app.post("/login", bodyParser.json(),(req, res) => {
 
       if (isTrue) {
         data.code = 200;
-        data.msg = "登录成功！ ";
+        data.msg = "登录成功！";
         data.result = result;
       }
     }
@@ -109,4 +109,162 @@ app.post("/register", bodyParser.json(),(req, res) => {
   });
 
 
+});
+
+//分类列表查询
+app.post("/typeList", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.userId;
+  var key = req.body.key;
+  var sql = "select * from type where user_id = '" + id + "'";
+  if (key) {
+    console.log("123");
+    sql += " and (type_name like '%"+key+"%' or type_info like '%"+key+"%' or type_time like '%"+key+"%') ";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    // data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '查询成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//添加&编辑分类
+app.post("/editType", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var userId = req.body.userId;
+  var id = req.body.id;
+  var name = req.body.name;
+  var info = req.body.info;
+  var time = req.body.time;
+  var sql;
+  if (id){
+    console.log("编辑");
+    sql = "UPDATE type SET type_name = '"+name+"',type_info='"+info+"' where type_id = '"+id+"'";
+  }else{
+    console.log("添加");
+    sql = "INSERT INTO type (type_name,type_time,type_info,user_id) VALUES ('"+name+"','"+time+"','"+info+"','"+userId+"')";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//删除类型
+app.post("/deleteType", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.ids;
+  var sql = "DELETE FROM type WHERE type_id IN ("+id+");DELETE FROM cost WHERE type_id in ("+id+")";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '删除成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//类型列表查询
+app.post("/classList", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.userId;
+  var key = req.body.key;
+  var sql = "select * from class where user_id = '" + id + "'";
+  if (key) {
+    console.log("123");
+    sql += " and (class_name like '%"+key+"%' or class_info like '%"+key+"%' or class_time like '%"+key+"%') ";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    // data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '查询成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//添加&编辑类型
+app.post("/editClass", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var userId = req.body.userId;
+  var id = req.body.id;
+  var name = req.body.name;
+  var info = req.body.info;
+  var time = req.body.time;
+  var sql;
+  if (id){
+    console.log("编辑");
+    sql = "UPDATE class SET class_name = '"+name+"',class_info='"+info+"' where class_id = '"+id+"'";
+  }else{
+    console.log("添加");
+    sql = "INSERT INTO class (class_name,class_time,class_info,user_id) VALUES ('"+name+"','"+time+"','"+info+"','"+userId+"')";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//删除类型
+app.post("/deleteClass", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.ids;
+  var sql = "DELETE FROM class WHERE class_id IN ("+id+")";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '删除成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
 });

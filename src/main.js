@@ -22,6 +22,10 @@ Vue.use(ElementUI);
 import common from "./utils/common.js";
 Vue.use(common);
 
+// 引入moment.js
+import moment from "moment"
+Vue.prototype.$moment = moment;
+
 //引入 utls.js
 import {domain} from './utils/utls.js'
 

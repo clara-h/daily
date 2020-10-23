@@ -69,7 +69,7 @@ export default {
           this.reqM1Service(url,params).then(
             res => {
               if(res.code === 200){
-                //console.log(res);
+                res.result[0].time = th.$moment(res.result[0].time).format('YYYY-MM-DD HH:mm:ss');
                 th.$store.commit("edit",res.result[0])
                 //console.log(res.result[0]);
                 //console.log(th.$store.state.login);
