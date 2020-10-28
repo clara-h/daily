@@ -1,39 +1,16 @@
 <template>
   <div>
     <el-menu
-      default-active="2"
+      :default-active="activeIndex"
       class="menu-height"
-      @open="handleOpen"
-      @close="handleClose">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="2">
+      @select="handleSelect">
+      <el-menu-item index="0">
         <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
+        <span slot="title">主页</span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
+      <el-menu-item :index="item.type_id.toString()" v-for="item in navData" :key="item.type_id">
+        <i class="el-icon-menu"></i>
+        <span slot="title">{{item.type_name}}</span>
       </el-menu-item>
     </el-menu>
   </div>
@@ -42,11 +19,54 @@
 <script>
   export default {
     name: "homeMenu",
+    data(){
+      return{
+        activeIndex: (this.$store.state.menuId).toString(),
+        navData: []
+      }
+    },
+    mounted(){
+      this.typeList();
+    },
+    computed: {
+      changeNav() {
+        return this.$store.state.navChange
+      }
+    },
+    // 监听
+    watch:{
+      changeNav(val) {
+        this.typeList();
+      }
+    },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+      typeList() {
+        let th = this;
+        let url = '/typeList';
+        let params = {
+          userId: this.$store.state.login.id,
+        };
+        //->调用第一个接口的请求服务
+        this.reqM1Service(url, params).then(
+          res => {
+            if(res.code === 200){
+              console.log(res.data);
+              th.navData = res.data;
+            } else {
+              th.$message.error(res.msg);
+            }
+          })
+          .catch(failResponse => {})
       },
-      handleClose(key, keyPath) {
+      handleSelect(key, keyPath) {
+        this.$store.commit("editHead",null);
+        this.$store.commit("editMenu",key.toString());
+        console.log(this.$store.state.headActive);
+        if (key==='0') {
+          this.$router.push({ name:"index" });
+        }else{
+          this.$router.push({ name: 'cost', query: { searchId: key } })
+        }
         console.log(key, keyPath);
       }
     }

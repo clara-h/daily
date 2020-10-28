@@ -268,3 +268,85 @@ app.post("/deleteClass", bodyParser.json(),(req, res) => {
     res.json(data);
   });
 });
+
+//消费列表查询
+app.post("/costList", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.userId, typeId = req.body.typeId, key = req.body.key, classId = req.body.classId;
+  var sql = "select * from cost where user_id = '" + id + "' and type_id = '" + typeId + "'";
+  if (classId) {
+    console.log(classId);
+    sql += "and class_id = '"+ classId + "'";
+  }
+  if (key) {
+    console.log("123");
+    sql += " and (cost_name like '%"+key+"%' or cost_info like '%"+key+"%' or cost_time like binary '%"+key+"%') ";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    // data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '查询成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//添加&编辑消费详情
+app.post("/editCost", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var userId = req.body.userId, typeId = req.body.typeId, classId = req.body.classId;
+  var id = req.body.id, price = req.body.price, className = req.body.className;
+  var name = req.body.name;
+  var info = req.body.info;
+  var time = req.body.time;
+  var sql;
+  if (id){
+    console.log("编辑");
+    sql = "UPDATE cost SET cost_name = '"+name+"',cost_info='"+info+"',cost_time='"+time+"',class_name='"+className+"',class_id='"+classId+"',price='"+price +"' where id = '"+id+"'";
+  }else{
+    console.log("添加");
+    sql = "INSERT INTO cost (cost_name,cost_time,cost_info,user_id,price,class_id,type_id,class_name) VALUES ('"+name+"','"+time+"','"+info+"','"+userId+"','"+price+"','"+classId+"','"+typeId+"','"+className+"')";
+  }
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
+
+//删除消费详情
+app.post("/deleteCost", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.query.ids;
+  var sql = "DELETE FROM cost WHERE id IN ("+id+")";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '删除成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});

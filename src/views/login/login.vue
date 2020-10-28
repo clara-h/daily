@@ -74,7 +74,7 @@ export default {
                 //console.log(res.result[0]);
                 //console.log(th.$store.state.login);
                 th.$message.success(res.msg);
-                th.$router.push({ name:"home" });
+                th.$router.push({ name:"index" });
               } else {
                 th.$message.error(res.msg);
               };

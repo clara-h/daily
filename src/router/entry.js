@@ -1,8 +1,10 @@
 
 const about = () => import(/* webpackChunkName: "about" */ "../views/About.vue")
-const costType = () => import(/* webpackChunkName: "about" */ "../views/type/type.vue")
-const costClass = () => import(/* webpackChunkName: "about" */ "../views/class/class.vue")
-const personCenter = () => import(/* webpackChunkName: "about" */ "../views/personCenter/personCenter.vue")
+const index = () => import(/* webpackChunkName: "index" */ "../views/index/index.vue")
+const costType = () => import(/* webpackChunkName: "costType" */ "../views/type/type.vue")
+const costClass = () => import(/* webpackChunkName: "costClass" */ "../views/class/class.vue")
+const personCenter = () => import(/* webpackChunkName: "personCenter" */ "../views/personCenter/personCenter.vue")
+const costDetail = () => import(/* webpackChunkName: "costDetail" */ "../views/cost/cost.vue")
 
 export default [
   {
@@ -13,6 +15,21 @@ export default [
       keepAlive: true
     },
     component: about
+  },
+  {
+    path:"/home/index",
+    name:"index",
+    meta: {
+      title: "主页",
+      keepAlive: true
+    },
+    component: index
+  },
+  {
+    path: "/home",
+    redirect: {
+      path: "/home/index"
+    }
   },
   {
     path:"/home/type",
@@ -40,5 +57,14 @@ export default [
       keepAlive: true
     },
     component: personCenter
+  },
+  {
+    path:"/home/cost",
+    name:"cost",
+    meta: {
+      title: "消费详情",
+      keepAlive: true
+    },
+    component: costDetail
   },
 ]

@@ -225,6 +225,7 @@
                 if(res.code === 200){
                   this.dialogFormVisible = false;
                   this.submitForm("searchForm");
+                  th.$store.commit("editNav",res.data);
                 } else {
                   th.$message.error(res.msg);
                 }
@@ -255,6 +256,7 @@
           res => {
             if(res.code === 200){
               th.$message.success("删除成功！");
+              th.$store.commit("editNav",res.data);
               this.submitForm("searchForm");
             } else {
               th.$message.error(res.msg);
@@ -280,12 +282,14 @@
   width: 100%
 }
 </style>
-<style>
-  .el-card__header{
-    padding-bottom: 0;
-    border-bottom: 1px solid #ccc;
-  }
-  .el-form-item__content{
-    width: 180px;
+<style lang="less">
+  .common-search{
+    .el-card__header{
+      padding-bottom: 0;
+      border-bottom: 1px solid #ccc;
+    }
+    .el-form-item__content{
+      width: 180px;
+    }
   }
 </style>

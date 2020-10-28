@@ -1,5 +1,5 @@
 <template>
-  <div class="class-main">
+  <div class="cost-main">
     <el-card class="box-card">
       <div slot="header" class="clearfix table-head">
         <!--搜索-->
@@ -8,6 +8,11 @@
             <el-form-item prop="key" label="关键字">
               <el-input type="key" v-model.trim="searchForm.key" autocomplete="off" placeholder="关键字" >
               </el-input>
+            </el-form-item>
+            <el-form-item prop="class" label="类型">
+              <el-select v-model="searchForm.class" placeholder="请选择类型">
+                <el-option v-for="item in classData" :label="item.class_name" :value="item.class_id" :key="item.class_id"></el-option>
+              </el-select>
             </el-form-item>
             <el-button type="primary" @click="submitForm('searchForm')" icon="el-icon-search">查询</el-button>
           </el-form>
@@ -25,27 +30,43 @@
           size="small"
           style="width: 100%"
           @selection-change="handleSelectionChange"
+          :span-method="objectSpanMethod"
           :header-cell-style="tableHeaderColor">
+          <el-table-column
+            prop="cost_date"
+            label="日期"
+            width="180">
+          </el-table-column>
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
           <el-table-column
-            prop="class_name"
+            prop="cost_name"
             label="名称"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="class_time"
-            label="创建时间"
-            width="180">
+            prop="class_name"
+            label="类型"
+            width="120">
           </el-table-column>
           <el-table-column
-            prop="class_info"
+            prop="price"
+            label="费用"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="cost_time"
+            label="时间"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="cost_info"
             label="说明"
             show-overflow-tooltip>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150">
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -53,18 +74,37 @@
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.row.class_id)">删除</el-button>
+                @click="handleDelete(scope.row.id)">删除</el-button>
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="cost_all"
+            label="总费用"
+            show-overflow-tooltip>
           </el-table-column>
         </el-table>
       </div>
     </el-card>
-
     <!--编辑&添加弹窗-->
-    <el-dialog :title="titleType+'类型'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="titleType+'消费'" :visible.sync="dialogFormVisible">
       <el-form :model="dialogForm" class="textLeft" ref="dialogForm" :rules="rules">
         <el-form-item label="名称" label-width="80px" prop="name">
           <el-input v-model.trim="dialogForm.name" autocomplete="off" class="widthName"></el-input>
+        </el-form-item>
+        <el-form-item label="日期" label-width="80px" prop="time">
+          <el-date-picker
+            v-model="dialogForm.time"
+            type="datetime"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="类型" label-width="80px" prop="class">
+          <el-select v-model="dialogForm.class" placeholder="请选择类型">
+            <el-option v-for="item in classData" :label="item.class_name" :value="item.class_id" :key="item.class_id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="价格" label-width="80px" prop="price">
+          <el-input v-model.trim="dialogForm.price" autocomplete="off" class="widthName"></el-input>
         </el-form-item>
         <el-form-item label="说明" label-width="80px" prop="loginName">
           <el-input
@@ -72,8 +112,7 @@
             placeholder="请输入内容"
             v-model.trim="dialogForm.info"
             maxlength="30"
-            show-word-limit
-          >
+            show-word-limit>
           </el-input>
         </el-form-item>
       </el-form>
@@ -83,26 +122,34 @@
       </div>
 
     </el-dialog>
-
   </div>
 </template>
 
 <script>
   export default {
-    name: "class",
+    name: "cost",
     data(){
       return {
         searchForm: {
           userId: this.$store.state.login.id,
           key: '',
+          class: '',
+          typeId:this.$route.query.searchId,
+          //time: '',
         },
+        classData: [],
         tableData: [],
         titleType:'',//弹窗标题
         dialogFormVisible: false,//添加弹窗
         dialogForm: {
           userId: this.$store.state.login.id,
+          typeId:this.$route.query.searchId,
           id: '',
           name:'',
+          time:'',
+          class:'',
+          price:'',
+          className: '',
           info:''
         },
         ids:[],//要删除的id
@@ -111,16 +158,58 @@
             { required: true, message: '请输入分类名称', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
           ],
-        }
+          class: [
+            { required: true, message: '请选择活类型', trigger: 'change' }
+          ],
+          time: [
+            { required: true, message: '请选择时间', trigger: 'change' }
+          ],
+          price: [
+            { required: true, message: '请输入价格', trigger: 'blur' },
+            { pattern: /^\d+$|^\d*\.\d+$/g, message: '格式不正确', trigger: 'blur' }
+          ],
+        },
+        rowIndex: [],
+        allPrice:[]
       }
     },
     created() {
     },
     mounted(){
+      this.classList();
       this.submitForm("searchForm");
-      // this.changeDate(this.time);
     },
     methods: {
+      //获取相同日期的行数
+      getrowIndex(data) {
+        console.log(data)
+        if(data==null){
+          return;
+        }
+        var sum =0,n=0;
+        for(var i=0;i<data.length;i++){
+          if(i===0) {
+            this.rowIndex[i]=1;
+            this.allPrice[i]=data[i].price;
+          }else{
+            if(data[i].cost_date===data[i-1].cost_date){
+              console.log(data[i].cost_date);
+              console.log(data[i-1].cost_date);
+              this.rowIndex[n]+=1;
+              this.allPrice[n] += data[i].price
+            }else{
+              n++;
+              console.log("+1")
+              this.rowIndex[n]=1;
+              this.allPrice[n]=this.tableData.price;
+
+            }
+          }
+        }
+
+        console.log(this.rowIndex);
+        console.log(this.allPrice);
+      },
       // 修改table header的背景色
       tableHeaderColor({ row, column, rowIndex, columnIndex }) {
         if (rowIndex === 0) {
@@ -132,19 +221,40 @@
         console.log(val);
         this.ids=[];
         for (var i=0;i<val.length;i++){
-          this.ids.push( val[i].type_id)
+          this.ids.push( val[i].id)
         }
         console.log(this.ids)
         return this.ids;
+      },
+      // 分类列表
+      classList(){
+        let th = this;
+        let url = '/classList';
+        let params = {
+          userId: this.$store.state.login.id,
+        };
+        //->调用第一个接口的请求服务
+        this.reqM1Service(url, params).then(
+          res => {
+            if(res.code === 200){
+              console.log(res.data);
+              th.classData = res.data;
+            } else {
+              th.$message.error(res.msg);
+            }
+          })
+          .catch(failResponse => {})
       },
       submitForm(formName) {//查询提交
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let th = this;
-            let url = '/classList';
+            let url = '/costList';
             let params = {
               userId: this.searchForm.userId,
               key: this.searchForm.key,
+              classId: this.searchForm.class,
+              typeId: this.searchForm.typeId,
             };
             //->调用第一个接口的请求服务
             this.reqM1Service(url, params).then(
@@ -152,11 +262,12 @@
                 if(res.code === 200){
                   console.log(res.data);
                   th.tableData = res.data;
+                  th.getrowIndex(th.tableData);
                   for(var i =0; i<res.data.length+1; i++){
-                    th.tableData[i].type_time = th.$moment(th.tableData[i].type_time).format('YYYY-MM-DD HH:mm:ss');
-                    //console.log(th.tableData[i].type_time);
+                    th.tableData[i].time = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD HH:mm:ss');
+                    th.tableData[i].cost_date = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD');
+                    th.tableData[i].cost_time = th.$moment(res.data[i].cost_time).format('HH:mm:ss');
                   }
-                  th.tableData = res.data;
                 } else {
                   th.$message.error(res.msg);
                 }
@@ -168,39 +279,32 @@
           }
         });
       },
-      // 修改时间格式
-      formatDateTime(date) {
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        m = m < 10 ? ('0' + m) : m;
-        var d = date.getDate();
-        d = d < 10 ? ('0' + d) : d;
-        var h = date.getHours();
-        h=h < 10 ? ('0' + h) : h;
-        var minute = date.getMinutes();
-        minute = minute < 10 ? ('0' + minute) : minute;
-        var second=date.getSeconds();
-        second=second < 10 ? ('0' + second) : second;
-        return y + '-' + m + '-' + d;
-      },
       // 添加类型
       addDialog() {
         this.titleType="添加";
         this.dialogFormVisible = true;
         this.dialogForm.id='';
         this.dialogForm.info= '';
+        this.dialogForm.time= '';
+        this.dialogForm.class= '';
         this.dialogForm.name='';
+        this.dialogForm.price='';
+        this.dialogForm.className='';
         this.$nextTick(() => {//清除element残留表单校 验
           this.$refs.dialogForm.clearValidate()
         });
       },
       // 编辑类型
       handleEdit(value) {
+        console.log(value.cost_time)
         this.titleType="添加";
         this.dialogFormVisible = true;
-        this.dialogForm.name = value.class_name;
-        this.dialogForm.info = value.class_info;
-        this.dialogForm.id = value.class_id;
+        this.dialogForm.name = value.cost_name;
+        this.dialogForm.time= value.time
+        this.dialogForm.class= value.class_id;
+        this.dialogForm.price=value.price;
+        this.dialogForm.info = value.cost_info;
+        this.dialogForm.id = value.id;
         this.$nextTick(() => {//清除element残留表单校 验
           this.$refs.dialogForm.clearValidate()
         });
@@ -210,16 +314,26 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let th = this;
-            let url = '/editClass';
+            let url = '/editCost';
+            console.log(this.classData)
+            var arr = this.classData
+            for(var i=0; i<arr.length; i++) {
+              if (this.dialogForm.class==arr[i].class_id) {
+                this.dialogForm.className = arr[i].class_name;
+              }
+            }
             let params = {
               id: this.dialogForm.id,
               userId: this.dialogForm.userId,
+              typeId: this.dialogForm.typeId,
               name: this.dialogForm.name,
+              price:this.dialogForm.price,
+              classId:this.dialogForm.class,
+              className:this.dialogForm.className,
               info: this.dialogForm.info,
-              time: this.formatDateTime(new Date())
+              time: this.$moment(this.dialogForm.time).format('YYYY-MM-DD HH:mm:ss'),
             };
             console.log(params)
-            console.log(this.formatDateTime(new Date()))
             //->调用第一个接口的请求服务
             this.reqM1Service(url, params).then(
               res => {
@@ -247,7 +361,7 @@
           id = id.join(',')
         }
         var th = this;
-        let url = '/deleteClass';
+        let url = '/deleteCost';
         let params = {
           ids:id,
         };
@@ -262,33 +376,45 @@
             }
           })
           .catch(failResponse => {})
+      },
+      // 合并相同日期的
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0 || columnIndex===8) {
+          //console.log(column)
+          /*if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }*/
+        }
       }
     }
   }
 </script>
 
 <style lang="less" scoped>
-  .class-main{
-    padding: 20px;
-  }
-  .table-head{
-    // display: flex;
-  }
-  .common-search{
-
-  }
-  .common-table{
-    width: 100%
-  }
+.cost-main{
+  padding: 20px;
+}
 </style>
 <style lang="less">
- .common-search{
-   .el-card__header{
-     padding-bottom: 0;
-     border-bottom: 1px solid #ccc;
-   }
-   .el-form-item__content{
-     width: 180px;
-   }
- }
+  .common-search{
+    .el-card__header{
+      padding-bottom: 0;
+      border-bottom: 1px solid #ccc;
+    }
+    .el-form-item__content{
+      width: 180px;
+    }
+    .el-date-editor.el-input, .el-date-editor.el-input__inner{
+      width: 180px;
+    }
+  }
+
 </style>

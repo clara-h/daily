@@ -53,6 +53,7 @@
       navClick(id,item) {
         this.$store.commit("editHead",id)
         this.activeIndex = this.$store.state.headActive;
+        this.$store.commit("editMenu",null);
         this.$router.push({name:item.path})
         if(id==='4') {
           this.$store.commit("edit",'')
