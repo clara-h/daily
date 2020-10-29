@@ -4,10 +4,14 @@
       <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" v-for="(item,index) in titList">
         <el-card class="box-card statis-card">
           <div slot="header" class="clearfix">
-            <span>{{item.type_name}}</span>
+            <span class="fl">{{item.type_name}}</span>
           </div>
           <div class="sum">
             总计消费：<b>{{allPrice[index]}}</b>元
+            <div class="link-btn">
+              <el-button size="mini" @click="linkDetail(item.type_id)">详情</el-button>
+              <el-button size="mini" @click="linkChart(item.type_id)">图表</el-button>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -86,6 +90,14 @@
           .catch(failResponse => {
           })
       },
+      // 跳转详情
+      linkDetail(key){
+        this.$router.push({ name: 'cost', query: { searchId: key } })
+      },
+      // 跳转图表
+      linkChart(key) {
+        this.$router.push({ name:'dailyEchart', query: { searchId: key } })
+      }
     }
   }
 </script>
@@ -99,6 +111,9 @@
     .sum{
       b{
         font-size: 18px;
+      }
+      .link-btn{
+        margin-top: 15px;
       }
     }
   }

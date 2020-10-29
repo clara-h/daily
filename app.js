@@ -116,10 +116,14 @@ app.post("/typeList", bodyParser.json(),(req, res) => {
   //var param = req.body || req.query || req.params  ;
   var id = req.body.userId;
   var key = req.body.key;
+  var typeId = req.body.id;
   var sql = "select * from type where user_id = '" + id + "'";
   if (key) {
     console.log("123");
     sql += " and (type_name like '%"+key+"%' or type_info like '%"+key+"%' or type_time like '%"+key+"%') ";
+  }
+  if (typeId) {
+    sql = "select * from type where type_id = '" + typeId + "'";
   }
   conn.query(sql, function (err, result) {
     var data = {};

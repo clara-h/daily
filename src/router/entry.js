@@ -5,6 +5,7 @@ const costType = () => import(/* webpackChunkName: "costType" */ "../views/type/
 const costClass = () => import(/* webpackChunkName: "costClass" */ "../views/class/class.vue")
 const personCenter = () => import(/* webpackChunkName: "personCenter" */ "../views/personCenter/personCenter.vue")
 const costDetail = () => import(/* webpackChunkName: "costDetail" */ "../views/cost/cost.vue")
+const charts = () => import(/* webpackChunkName: "costDetail" */ "../views/dailyEchart/dailyEchart.vue")
 
 export default [
   {
@@ -66,5 +67,14 @@ export default [
       keepAlive: true
     },
     component: costDetail
+  },
+  {
+    path:"/home/echart",
+    name:"dailyEchart",
+    meta: {
+      title: "消费详情",
+      keepAlive: true
+    },
+    component: charts
   },
 ]

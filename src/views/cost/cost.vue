@@ -15,6 +15,7 @@
               </el-select>
             </el-form-item>
             <el-button type="primary" @click="submitForm('searchForm')" icon="el-icon-search">查询</el-button>
+            <el-button type="primary" @click="linkChart($route.query.searchId)">统计图表</el-button>
           </el-form>
         </div>
         <!--操作按钮-->
@@ -432,6 +433,11 @@
         });
 
         return sums;
+      },
+      // 跳转统计图表
+      linkChart(key) {
+        console.log(key);
+        this.$router.push({ name:'dailyEchart', query: { searchId: key} })
       }
     }
   }

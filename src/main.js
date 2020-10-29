@@ -26,6 +26,10 @@ Vue.use(common);
 import moment from "moment"
 Vue.prototype.$moment = moment;
 
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 //引入 utls.js
 import {domain} from './utils/utls.js'
 
