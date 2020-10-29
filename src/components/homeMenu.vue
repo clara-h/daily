@@ -21,7 +21,7 @@
     name: "homeMenu",
     data(){
       return{
-        activeIndex: (this.$store.state.menuId).toString(),
+        activeIndex: this.$store.state.menuId,
         navData: []
       }
     },
