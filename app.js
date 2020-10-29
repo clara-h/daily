@@ -276,12 +276,13 @@ app.post("/costList", bodyParser.json(),(req, res) => {
   var sql = "select * from cost where user_id = '" + id + "' and type_id = '" + typeId + "'";
   if (classId) {
     console.log(classId);
-    sql += "and class_id = '"+ classId + "'";
+    sql += " and class_id = '"+ classId + "'";
   }
   if (key) {
     console.log("123");
-    sql += " and (cost_name like '%"+key+"%' or cost_info like '%"+key+"%' or cost_time like binary '%"+key+"%') ";
+    sql += " and (cost_name like '%"+key+"%' or cost_info like '%"+key+"%' or cost_time like binary '%"+key+"%')";
   }
+  sql += " order by cost_time";
   conn.query(sql, function (err, result) {
     var data = {};
     // data.sql = sql;

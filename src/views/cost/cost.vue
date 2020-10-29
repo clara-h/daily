@@ -29,9 +29,18 @@
           border
           size="small"
           style="width: 100%"
+          show-summary
           @selection-change="handleSelectionChange"
           :span-method="objectSpanMethod"
-          :header-cell-style="tableHeaderColor">
+          :header-cell-style="tableHeaderColor"
+          :summary-method="getSummaries">
+          <el-table-column
+            label="天数"
+            width="180">
+            <template slot-scope="scope">
+              <span>{{rowIndex[scope.$index]+1}}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="cost_date"
             label="日期"
@@ -78,9 +87,11 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="cost_all"
-            label="总费用"
-            show-overflow-tooltip>
+            prop="price"
+            label="总费用">
+            <template slot-scope="scope">
+              <span>{{allPrice[rowIndex[scope.$index]]}} 元</span>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -169,7 +180,9 @@
             { pattern: /^\d+$|^\d*\.\d+$/g, message: '格式不正确', trigger: 'blur' }
           ],
         },
+        spanArr: [],
         rowIndex: [],
+        pos:0,
         allPrice:[]
       }
     },
@@ -189,24 +202,29 @@
         var sum =0,n=0;
         for(var i=0;i<data.length;i++){
           if(i===0) {
-            this.rowIndex[i]=1;
+            this.spanArr.push(1)
+            this.pos = 0
+            this.rowIndex.push(n);
             this.allPrice[i]=data[i].price;
           }else{
             if(data[i].cost_date===data[i-1].cost_date){
+              // 如果useName相等就累加，并且push 0
+              this.spanArr[this.pos] += 1
+              this.spanArr.push(0)
               console.log(data[i].cost_date);
               console.log(data[i-1].cost_date);
-              this.rowIndex[n]+=1;
-              this.allPrice[n] += data[i].price
+              this.rowIndex.push(n);
+              this.allPrice[n] += data[i].price;
             }else{
+              // 不相等push 1
+              this.spanArr.push(1)
+              this.pos = i
               n++;
-              console.log("+1")
-              this.rowIndex[n]=1;
-              this.allPrice[n]=this.tableData.price;
-
+              this.rowIndex.push(n);
+              this.allPrice[n]=this.tableData[i].price;
             }
           }
         }
-
         console.log(this.rowIndex);
         console.log(this.allPrice);
       },
@@ -262,12 +280,12 @@
                 if(res.code === 200){
                   console.log(res.data);
                   th.tableData = res.data;
-                  th.getrowIndex(th.tableData);
-                  for(var i =0; i<res.data.length+1; i++){
+                  for(var i =0; i<res.data.length; i++){
                     th.tableData[i].time = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD HH:mm:ss');
                     th.tableData[i].cost_date = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD');
                     th.tableData[i].cost_time = th.$moment(res.data[i].cost_time).format('HH:mm:ss');
                   }
+                  th.getrowIndex(th.tableData);
                 } else {
                   th.$message.error(res.msg);
                 }
@@ -379,20 +397,41 @@
       },
       // 合并相同日期的
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0 || columnIndex===8) {
-          //console.log(column)
-          /*if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }*/
+        if (columnIndex === 0 || columnIndex === 1 || columnIndex === 9) {
+          const _row = this.spanArr[rowIndex];
+          const _col = _row > 0 ? 1 : 0;
+          return {
+            rowspan: _row,
+            colspan: _col
+          }
         }
+      },
+      // 统计
+      getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '统计';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (column.label === '总费用' || column.property === 'price') {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += ' 元';
+          } else {
+            sums[index] = '--';
+          }
+        });
+
+        return sums;
       }
     }
   }
