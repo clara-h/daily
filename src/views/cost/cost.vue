@@ -359,6 +359,7 @@
                 if(res.code === 200){
                   this.dialogFormVisible = false;
                   this.submitForm("searchForm");
+                  this.$router.go(0);
                 } else {
                   th.$message.error(res.msg);
                 }
@@ -390,6 +391,7 @@
             if(res.code === 200){
               th.$message.success("删除成功！");
               this.submitForm("searchForm");
+              this.$router.go(0);
             } else {
               th.$message.error(res.msg);
             }
