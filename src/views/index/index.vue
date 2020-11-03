@@ -52,8 +52,8 @@
               for(var i =0; i<res.data.length; i++){
                 sum += res.data[i].price;
               }
-              this.allPrice.push(sum);
-              console.log(id);
+              this.allPrice.push((sum).toFixed(2));
+              //console.log(id);
               console.log(this.allPrice);
             } else {
               th.$message.error(res.msg);
