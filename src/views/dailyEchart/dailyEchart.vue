@@ -136,6 +136,9 @@
         }
         console.log(this.daily);
         console.log(this.allPrice);
+        for (var i =0; i<this.allPrice.length; i++) {
+          this.allPrice[i] = (this.allPrice[i]).toFixed(2)
+        }
         this.dailyLine(this.daily,this.allPrice);
       },
       //获取图表需要的数据
@@ -186,11 +189,23 @@
             }
           },
           yAxis: {},
-          series: [{
-            name: '总消费',
-            type: 'bar',
-            data: yData
-          }]
+          series: [
+            {
+              name: '总消费',
+              type: 'bar',
+              data: yData,
+              markLine : {
+                data : [
+                  {type : 'average', name: '平均值'}
+                ]
+              }
+            },
+            {
+              name: '总消费',
+              type: 'line',
+              data: yData,
+            },
+          ]
         });
       },
       // 饼图

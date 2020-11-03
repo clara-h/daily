@@ -30,6 +30,7 @@
           border
           size="small"
           style="width: 100%"
+          height="400px"
           show-summary
           @selection-change="handleSelectionChange"
           :span-method="objectSpanMethod"
@@ -91,7 +92,7 @@
             prop="price"
             label="总费用">
             <template slot-scope="scope">
-              <span>{{allPrice[rowIndex[scope.$index]]}} 元</span>
+              <span>{{(allPrice[rowIndex[scope.$index]]).toFixed(2)}} 元</span>
             </template>
           </el-table-column>
         </el-table>
@@ -185,6 +186,15 @@
         rowIndex: [],
         pos:0,
         allPrice:[]
+      }
+    },
+    watch: {
+      $route: {
+        handler: function (val, oldVal) {
+          this.$router.go(0);
+          //this.classList();
+          //this.submitForm("searchForm");
+        }
       }
     },
     created() {
@@ -428,7 +438,7 @@
                 return prev;
               }
             }, 0);
-            sums[index] += ' 元';
+            sums[index]= (sums[index]).toFixed(2) + ' 元';
           } else {
             sums[index] = '--';
           }
@@ -449,6 +459,9 @@
 .cost-main{
   padding: 20px;
 }
+  .tab-height{
+    height: calc(100vh - 90px);
+  }
 </style>
 <style lang="less">
   .common-search{

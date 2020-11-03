@@ -32,7 +32,6 @@
       this.typeList();
     },
     mounted(){
-
     },
     methods: {
       //获取对应的数据
