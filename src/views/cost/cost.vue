@@ -38,15 +38,14 @@
           :summary-method="getSummaries">
           <el-table-column
             label="天数"
-            width="180">
+            width="50">
             <template slot-scope="scope">
               <span>{{rowIndex[scope.$index]+1}}</span>
             </template>
           </el-table-column>
           <el-table-column
             prop="cost_date"
-            label="日期"
-            width="180">
+            label="日期">
           </el-table-column>
           <el-table-column
             type="selection"
@@ -54,23 +53,19 @@
           </el-table-column>
           <el-table-column
             prop="cost_name"
-            label="名称"
-            width="120">
+            label="名称">
           </el-table-column>
           <el-table-column
             prop="class_name"
-            label="类型"
-            width="120">
+            label="类型">
           </el-table-column>
           <el-table-column
             prop="price"
-            label="费用"
-            width="120">
+            label="费用">
           </el-table-column>
           <el-table-column
             prop="cost_time"
-            label="时间"
-            width="120">
+            label="时间">
           </el-table-column>
           <el-table-column
             prop="cost_info"

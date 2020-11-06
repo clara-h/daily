@@ -9,6 +9,36 @@
         <div id="barChart" :style="{width:'100%', height:'400px'}"></div>
       </div>
     </el-card>
+
+    <el-dialog title="消费详情" :visible.sync="dialogTableVisible" width="600px">
+      <el-table :data="gridData">
+        <el-table-column
+          prop="cost_date"
+          label="日期">
+        </el-table-column>
+        <el-table-column
+          prop="cost_name"
+          label="名称">
+        </el-table-column>
+        <el-table-column
+          prop="class_name"
+          label="类型">
+        </el-table-column>
+        <el-table-column
+          prop="price"
+          label="费用">
+        </el-table-column>
+        <el-table-column
+          prop="cost_time"
+          label="时间">
+        </el-table-column>
+        <el-table-column
+          prop="cost_info"
+          label="说明"
+          show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -24,7 +54,9 @@
         daily: [],
         allPrice:[],
         barData: [],
-        classCost:[]
+        classCost:[],
+        dialogTableVisible: false,
+        gridData: []
       }
     },
     created() {
@@ -60,6 +92,48 @@
           .catch(failResponse => {})
       },
       //获取类型的总消费
+      getEchartData(num,val,th){
+        let url = '/echartCostList';
+        let data = {
+          userId: th.$store.state.login.id,
+          typeId: th.$route.query.searchId,
+          className: val,
+        };
+        if (num === 1){
+          console.log(num)
+          let data = {
+            userId: th.$store.state.login.id,
+            typeId: th.$route.query.searchId,
+            className: val,
+          };
+        }else{
+          console.log(num)
+          let data = {
+            userId: th.$store.state.login.id,
+            typeId: th.$route.query.searchId,
+            time: val,
+          };
+        }
+        console.log(data);
+        //->调用第一个接口的请求服务
+        th.reqM1Service(url, data).then(
+          res => {
+            if(res.code === 200){
+              console.log(res.data);
+              th.gridData = res.data;
+              for(var i =0; i<res.data.length; i++){
+                th.gridData[i].time = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD HH:mm:ss');
+                th.gridData[i].cost_date = th.$moment(res.data[i].cost_time).format('YYYY-MM-DD');
+                th.gridData[i].cost_time = th.$moment(res.data[i].cost_time).format('HH:mm:ss');
+              }
+              console.log(th.gridData)
+            } else {
+              th.$message.error(res.msg);
+            }
+          })
+          .catch(failResponse => {})
+      },
+      //获取类型的总消费
       getCost(id){
         let th = this;
         let url = '/costList';
@@ -80,7 +154,7 @@
               }
               th.classCost.push(sum);
               console.log(th.classCost)
-              th.dailyBar(th.barData,th.classCost);
+              th.dailyBar(th.barData,th.classCost,th);
             } else {
               th.$message.error(res.msg);
             }
@@ -209,7 +283,7 @@
         });
       },
       // 饼图
-      dailyBar(data,yData){
+      dailyBar(data,yData,th){
         console.log(data);
         console.log(this.barData);
 
@@ -253,6 +327,12 @@
               }
             }
           ]
+        });
+        myChart.on('click', function (params) {
+          th.dialogTableVisible = true;
+          //console.log(params);
+          th.getEchartData(1,params.name,th)
+          //console.log(params);
         })
       }
     }

@@ -355,3 +355,32 @@ app.post("/deleteCost", bodyParser.json(),(req, res) => {
     res.json(data);
   });
 });
+
+//图表消费列表查询
+app.post("/echartCostList", bodyParser.json(),(req, res) => {
+  //var param = req.body || req.query || req.params  ;
+  var id = req.body.userId, typeId = req.body.typeId, className = req.body.className, time = req.body.time ;
+  var sql = "select * from cost where user_id = '" + id + "' and type_id = '" + typeId + "'";
+  if (time) {
+    console.log(time);
+    sql += " and (cost_time like '%"+time+"%')";
+  }
+  if(className) {
+    sql += " and (class_name like '%" + className + "%')";
+  }
+  sql += " order by cost_time";
+  conn.query(sql, function (err, result) {
+    var data = {};
+    data.sql = sql;
+    if (err) {
+      data.msg = err.message;
+      data.code = 202;
+      console.log("err:", err.message);
+    } else {
+      data.code = 200;
+      data.msg = '查询成功！'
+      data.data = result;
+    }
+    res.json(data);
+  });
+});
