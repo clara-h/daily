@@ -91,10 +91,12 @@
       },
       // 跳转详情
       linkDetail(key){
+        this.$store.commit("editMenu",key.toString());
         this.$router.push({ name: 'cost', query: { searchId: key } })
       },
       // 跳转图表
       linkChart(key) {
+        this.$store.commit("editMenu",key.toString());
         this.$router.push({ name:'dailyEchart', query: { searchId: key } })
       }
     }

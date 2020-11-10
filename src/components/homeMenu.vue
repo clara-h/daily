@@ -29,6 +29,9 @@
       this.typeList();
     },
     computed: {
+      listensNav () { // 菜单状态
+        return this.$store.state.menuId
+      },
       changeNav() {
         return this.$store.state.navChange
       }
@@ -37,6 +40,9 @@
     watch:{
       changeNav(val) {
         this.typeList();
+      },
+      listensNav(val) {
+        this.activeIndex = val
       }
     },
     methods: {
@@ -61,6 +67,7 @@
       handleSelect(key, keyPath) {
         this.$store.commit("editHead",null);
         this.$store.commit("editMenu",key.toString());
+        //console.log(key)
         console.log(this.$store.state.headActive);
         if (key==='0') {
           this.$router.push({ name:"index" });

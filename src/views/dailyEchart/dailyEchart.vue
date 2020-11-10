@@ -10,8 +10,12 @@
       </div>
     </el-card>
 
-    <el-dialog title="消费详情" :visible.sync="dialogTableVisible" width="600px">
-      <el-table :data="gridData">
+    <el-dialog title="消费详情" :visible.sync="dialogTableVisible" width="80%">
+      <div class="clearfix top-search">
+        <span class="fl">金额大于：</span>
+        <el-input-number v-model="priceNum" controls-position="right" :min="1" :step="100" :max="1000"></el-input-number>
+      </div>
+      <el-table :data="gridData" :rowClassName = "fnRowClass">
         <el-table-column
           prop="cost_date"
           label="日期">
@@ -56,7 +60,8 @@
         barData: [],
         classCost:[],
         dialogTableVisible: false,
-        gridData: []
+        gridData: [],
+        priceNum: 200
       }
     },
     created() {
@@ -79,12 +84,12 @@
         this.reqM1Service(url, params).then(
           res => {
             if(res.code === 200){
-              console.log(res.data);
+              //console.log(res.data);
               for(var i =0; i<res.data.length; i++){
                 th.barData.push(res.data[i].class_name);
                 th.getCost(res.data[i].class_id);
               }
-              console.log(th.barData);
+              //console.log(th.barData);
             } else {
               th.$message.error(res.msg);
             }
@@ -94,27 +99,23 @@
       //获取类型的总消费
       getEchartData(num,val,th){
         let url = '/echartCostList';
-        let data = {
-          userId: th.$store.state.login.id,
-          typeId: th.$route.query.searchId,
-          className: val,
-        };
+        let data = {};
         if (num === 1){
-          console.log(num)
-          let data = {
+          //console.log(num)
+          data = {
             userId: th.$store.state.login.id,
             typeId: th.$route.query.searchId,
             className: val,
           };
         }else{
-          console.log(num)
-          let data = {
+          //console.log(num)
+          data = {
             userId: th.$store.state.login.id,
             typeId: th.$route.query.searchId,
             time: val,
           };
         }
-        console.log(data);
+        //console.log(data);
         //->调用第一个接口的请求服务
         th.reqM1Service(url, data).then(
           res => {
@@ -152,7 +153,7 @@
               for(var i =0; i<res.data.length; i++){
                 sum += res.data[i].price
               }
-              th.classCost.push(sum);
+              th.classCost.push(sum.toFixed(2));
               console.log(th.classCost)
               th.dailyBar(th.barData,th.classCost,th);
             } else {
@@ -213,7 +214,7 @@
         for (var i =0; i<this.allPrice.length; i++) {
           this.allPrice[i] = (this.allPrice[i]).toFixed(2)
         }
-        this.dailyLine(this.daily,this.allPrice);
+        this.dailyLine(this.daily,this.allPrice,this);
       },
       //获取图表需要的数据
       getData(){
@@ -240,7 +241,7 @@
           .catch(failResponse => {})
       },
       //图表
-      dailyLine(xData,yData){
+      dailyLine(xData,yData,th){
         console.log(xData)
         // 基于准备好的dom，初始化echarts实例
         let myChart = echarts.init(document.getElementById('myChart'))
@@ -253,6 +254,9 @@
             trigger: 'axis',
             axisPointer: {            // 坐标轴指示器，坐标轴触发有效
               type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: function (params) {
+              return params[0].name + '<br>'+params[0].seriesName+":"+params[0].data+'元';
             }
           },
           xAxis: {
@@ -268,6 +272,20 @@
               name: '总消费',
               type: 'bar',
               data: yData,
+              markPoint: {
+                symbol: 'pin', //标记(气泡)的图形
+                symbolSize: 80, //标记(气泡)的大小
+                itemStyle:{
+                  color: '#4587E7', //图形的颜色。
+                  borderColor: '#000',//图形的描边颜色。支持的颜色格式同 color，不支持回调函数。
+                  borderWidth: 0,//描边线宽。为 0 时无描边。
+                  borderType: 'solid' //柱条的描边类型，默认为实线，支持 ‘solid’, ‘dashed’, ‘dotted’。
+                },
+                data: [
+                  {type: 'max', name: '最大值'},
+                  {type: 'min', name: '最小值'}
+                ]
+              },
               markLine : {
                 data : [
                   {type : 'average', name: '平均值'}
@@ -281,19 +299,23 @@
             },
           ]
         });
+        myChart.on('click', function (params) {
+          th.dialogTableVisible = true;
+          // console.log(params)
+          th.getEchartData(2,params.name,th)
+        })
       },
       // 饼图
       dailyBar(data,yData,th){
         console.log(data);
         console.log(this.barData);
-
         var itemData = [];
         var obj = {};
         for(var i =0; i<data.length;i++){
           obj = {value:yData[i],name:data[i]}
           itemData.push(obj);
         }
-        console.log(itemData);
+        //console.log(itemData);
         // 基于准备好的dom，初始化echarts实例
         let myChart = echarts.init(document.getElementById('barChart'))
         // 绘制图表
@@ -304,7 +326,7 @@
           },
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} ({d}%)'
+            formatter: '{a} <br/>{b} : {c}元  ({d}%)'
           },
           legend: {
             orient: 'vertical',
@@ -334,7 +356,12 @@
           th.getEchartData(1,params.name,th)
           //console.log(params);
         })
-      }
+      },
+      // 给大于一定金额的加样式
+      fnRowClass({row,column,rowIndex,columnIndex}){
+        console.log(row.price)
+        return row.price > this.priceNum ? "csbsTypes" :""
+      },
     }
   }
 </script>
@@ -346,4 +373,15 @@
     font-size: 16px;
   }
 }
+  .top-search{
+    display: flex;
+    //justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+</style>
+<style lang="less">
+  .el-table .csbsTypes td{
+    background-color: rgba(255, 244, 209, 0.62) !important;
+  }
 </style>
