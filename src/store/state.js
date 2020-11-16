@@ -6,7 +6,8 @@ const state = {
   headActive: '',
   navChange: '',
   menuId: '0',
-  indexMenu: ''
+  indexMenu: '',
+  langeType: 'zh'
 };
 
 export default state

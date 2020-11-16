@@ -5,23 +5,23 @@
         <!--搜索-->
         <div class="common-search fl">
           <el-form :inline='true' :model="searchForm" ref="searchForm">
-            <el-form-item prop="key" label="关键字">
-              <el-input type="key" v-model.trim="searchForm.key" autocomplete="off" placeholder="关键字" >
+            <el-form-item prop="key" :label="$t('costSearch.keyWord')">
+              <el-input type="key" v-model.trim="searchForm.key" autocomplete="off" :placeholder="$t('costSearch.keyWord')" >
               </el-input>
             </el-form-item>
-            <el-form-item prop="class" label="类型">
-              <el-select v-model="searchForm.class" placeholder="请选择类型">
+            <el-form-item prop="class" :label="$t('costSearch.type')">
+              <el-select v-model="searchForm.class" :placeholder="$t('costSearch.typeTip')">
                 <el-option v-for="item in classData" :label="item.class_name" :value="item.class_id" :key="item.class_id"></el-option>
               </el-select>
             </el-form-item>
-            <el-button type="primary" @click="submitForm('searchForm')" icon="el-icon-search">查询</el-button>
-            <el-button type="primary" @click="linkChart($route.query.searchId)">统计图表</el-button>
+            <el-button type="primary" @click="submitForm('searchForm')" icon="el-icon-search">{{$t('costSearch.secrchBtn')}}</el-button>
+            <el-button type="primary" @click="linkChart($route.query.searchId)">{{$t('costSearch.chartBtn')}}</el-button>
           </el-form>
         </div>
         <!--操作按钮-->
         <div class="head-btn fr">
-          <el-button type="primary" @click="addDialog">添加</el-button>
-          <el-button type="danger" @click="handleDelete(ids)">删除</el-button>
+          <el-button type="primary" @click="addDialog">{{$t('costSearch.addBtn')}}</el-button>
+          <el-button type="danger" @click="handleDelete(ids)">{{$t('costSearch.deleteBtn')}}</el-button>
         </div>
       </div>
       <div class="common-table">
@@ -37,15 +37,15 @@
           :header-cell-style="tableHeaderColor"
           :summary-method="getSummaries">
           <el-table-column
-            label="天数"
-            width="50">
+            :label="$t('tableTxt.day')"
+            width="70">
             <template slot-scope="scope">
               <span>{{rowIndex[scope.$index]+1}}</span>
             </template>
           </el-table-column>
           <el-table-column
             prop="cost_date"
-            label="日期">
+            :label="$t('tableTxt.date')">
           </el-table-column>
           <el-table-column
             type="selection"
@@ -53,71 +53,71 @@
           </el-table-column>
           <el-table-column
             prop="cost_name"
-            label="名称">
+            :label="$t('tableTxt.name')">
           </el-table-column>
           <el-table-column
             prop="class_name"
-            label="类型">
+            :label="$t('tableTxt.type')">
           </el-table-column>
           <el-table-column
             prop="price"
-            label="费用">
+            :label="$t('tableTxt.price')">
           </el-table-column>
           <el-table-column
             prop="cost_time"
-            label="时间">
+            :label="$t('tableTxt.time')">
           </el-table-column>
           <el-table-column
             prop="cost_info"
-            label="说明"
+            :label="$t('tableTxt.info')"
             show-overflow-tooltip>
           </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column :label="$t('tableTxt.operate')" width="160">
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleEdit(scope.row)">编辑</el-button>
+                @click="handleEdit(scope.row)">{{$t('tableTxt.editBtn')}}</el-button>
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.row.id)">删除</el-button>
+                @click="handleDelete(scope.row.id)">{{$t('tableTxt.deleteBtn')}}</el-button>
             </template>
           </el-table-column>
           <el-table-column
             prop="price"
-            label="总费用">
+            :label="$t('tableTxt.allPrice')">
             <template slot-scope="scope">
-              <span>{{(allPrice[rowIndex[scope.$index]]).toFixed(2)}} 元</span>
+              <span>{{(allPrice[rowIndex[scope.$index]]).toFixed(2)}} {{$t('indexTxt.money')}}</span>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </el-card>
     <!--编辑&添加弹窗-->
-    <el-dialog :title="titleType+'消费'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="titleType+' '+$t('dialogTxt.tit')" :visible.sync="dialogFormVisible">
       <el-form :model="dialogForm" class="textLeft" ref="dialogForm" :rules="rules">
-        <el-form-item label="名称" label-width="80px" prop="name">
+        <el-form-item :label="$t('tableTxt.name')" label-width="80px" prop="name">
           <el-input v-model.trim="dialogForm.name" autocomplete="off" class="widthName"></el-input>
         </el-form-item>
-        <el-form-item label="日期" label-width="80px" prop="time">
+        <el-form-item :label="$t('tableTxt.date')" label-width="80px" prop="time">
           <el-date-picker
             v-model="dialogForm.time"
             type="datetime"
-            placeholder="选择日期">
+            :placeholder="$t('dialogTxt.dateTip')">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="类型" label-width="80px" prop="class">
-          <el-select v-model="dialogForm.class" placeholder="请选择类型">
+        <el-form-item :label="$t('tableTxt.type')" label-width="80px" prop="class">
+          <el-select v-model="dialogForm.class" :placeholder="$t('dialogTxt.typeTip')">
             <el-option v-for="item in classData" :label="item.class_name" :value="item.class_id" :key="item.class_id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="价格" label-width="80px" prop="price">
+        <el-form-item :label="$t('tableTxt.price')" label-width="80px" prop="price">
           <el-input v-model.trim="dialogForm.price" autocomplete="off" class="widthName"></el-input>
         </el-form-item>
-        <el-form-item label="说明" label-width="80px" prop="loginName">
+        <el-form-item :label="$t('tableTxt.info')" label-width="80px" prop="loginName">
           <el-input
             type="textarea"
-            placeholder="请输入内容"
+            :placeholder="$t('dialogTxt.infoTip')"
             v-model.trim="dialogForm.info"
             maxlength="30"
             show-word-limit>
@@ -125,8 +125,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="subdialog('dialogForm')">确 定</el-button>
+        <el-button @click="dialogFormVisible = false">{{$t('dialogTxt.cancel')}}</el-button>
+        <el-button type="primary" @click="subdialog('dialogForm')">{{$t('dialogTxt.define')}}</el-button>
       </div>
 
     </el-dialog>
@@ -305,7 +305,7 @@
       },
       // 添加类型
       addDialog() {
-        this.titleType="添加";
+        this.titleType=this.$t('costSearch.addBtn');
         this.dialogFormVisible = true;
         this.dialogForm.id='';
         this.dialogForm.info= '';
@@ -321,7 +321,7 @@
       // 编辑类型
       handleEdit(value) {
         console.log(value.cost_time)
-        this.titleType="添加";
+        this.titleType=this.$t('tableTxt.editBtn');
         this.dialogFormVisible = true;
         this.dialogForm.name = value.cost_name;
         this.dialogForm.time= value.time
@@ -420,7 +420,7 @@
         const sums = [];
         columns.forEach((column, index) => {
           if (index === 0) {
-            sums[index] = '统计';
+            sums[index] = this.$t('tableTxt.statisticTxt');
             return;
           }
           const values = data.map(item => Number(item[column.property]));
@@ -433,7 +433,7 @@
                 return prev;
               }
             }, 0);
-            sums[index]= (sums[index]).toFixed(2) + ' 元';
+            sums[index]= (sums[index]).toFixed(2) + this.$t('indexTxt.money');
           } else {
             sums[index] = '--';
           }

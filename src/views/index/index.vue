@@ -7,10 +7,10 @@
             <span class="fl">{{item.type_name}}</span>
           </div>
           <div class="sum">
-            总计消费：<b>{{allPrice[index]}}</b>元
+            {{$t('indexTxt.infoName')}}：<b>{{allPrice[index]}}</b> {{$t('indexTxt.money')}}
             <div class="link-btn">
-              <el-button size="mini" @click="linkDetail(item.type_id)">详情</el-button>
-              <el-button size="mini" @click="linkChart(item.type_id)">图表</el-button>
+              <el-button size="mini" @click="linkDetail(item.type_id)">{{$t('indexTxt.detailBtn')}}</el-button>
+              <el-button size="mini" @click="linkChart(item.type_id)">{{$t('indexTxt.echartBtn')}}</el-button>
             </div>
           </div>
         </el-card>

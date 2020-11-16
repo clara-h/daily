@@ -16,4 +16,8 @@ export default {
   editMenu(state,data){
     state.menuId=data;
   },
+  //修改语言
+  editLanges(state,data){
+    state.langeType=data;
+  },
 }

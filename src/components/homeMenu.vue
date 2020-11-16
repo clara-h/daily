@@ -6,7 +6,7 @@
       @select="handleSelect">
       <el-menu-item index="0">
         <i class="el-icon-menu"></i>
-        <span slot="title">主页</span>
+        <span slot="title">{{$t('leftMenu.home')}}</span>
       </el-menu-item>
       <el-menu-item :index="item.type_id.toString()" v-for="item in navData" :key="item.type_id">
         <i class="el-icon-menu"></i>
@@ -24,6 +24,9 @@
         activeIndex: this.$store.state.menuId,
         navData: []
       }
+    },
+    created() {
+      this.$i18n.locale = this.$store.state.langeType;
     },
     mounted(){
       this.typeList();

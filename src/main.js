@@ -33,6 +33,9 @@ Vue.prototype.$echarts = echarts
 //引入 utls.js
 import {domain} from './utils/utls.js'
 
+// 国际化
+import i18n from "./i18n";
+
 import glSvgIcon from '@/components/common/glSvgIcon/glSvgIcon' // svg组件
 // 注册为全局组件
 
@@ -65,4 +68,5 @@ new Vue({
   render: h => h(App),
   router,
   store,
+  i18n,
 }).$mount("#app");
