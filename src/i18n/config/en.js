@@ -61,6 +61,11 @@ const en = {
     infoTip: 'Please enter the content',
     cancel: 'Cancel',
     define: 'Define'
-  }
+  },
+  echartTxt: {
+    tit: 'Consumption chart',
+    costName: '',
+  },
+
 }
 export default en;

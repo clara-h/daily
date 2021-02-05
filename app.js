@@ -338,7 +338,7 @@ app.post("/editCost", bodyParser.json(),(req, res) => {
 //删除消费详情
 app.post("/deleteCost", bodyParser.json(),(req, res) => {
   //var param = req.body || req.query || req.params  ;
-  var id = req.query.ids;
+  var id = req.body.ids;
   var sql = "DELETE FROM cost WHERE id IN ("+id+")";
   conn.query(sql, function (err, result) {
     var data = {};

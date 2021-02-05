@@ -22,10 +22,11 @@ router.beforeEach((to,from,next) => {
   if (to.path === "/login" || to.path === "/register") return next();
   //从 sessionStorage 中获取到保存的信息
   //console.log(window.sessionStorage);
-  //console.log(window.sessionStorage.getItem("vuex"));
-  const userId = window.sessionStorage.getItem("vuex");
+  console.log(window.sessionStorage.getItem("vuex"));
+  let loginData = window.sessionStorage.getItem("vuex")
+  let userId = JSON.parse(loginData).login;
   //没有则强制跳转到登录页面
-  if (!userId) return next("/login");
+  if (userId === '') return next("/login");
   next();
 });
 

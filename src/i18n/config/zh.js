@@ -63,6 +63,10 @@ const zh = {
   },
   messageTxt:{
     userName: '请输入用户名',
-  }
+  },
+  echartTxt: {
+    tit: '消费统计',
+    costName: '',
+  },
 }
 export default zh

@@ -73,9 +73,11 @@
         this.activeIndex = this.$store.state.headActive;
         this.$store.commit("editMenu",null);
         this.$router.push({name:path})
-        if(id==='4') {
+        console.log(window.sessionStorage)
+        if(id===4) {
           this.$store.commit("edit",'')
           window.sessionStorage.clear()
+          console.log(window.sessionStorage)
         }
       }
     }

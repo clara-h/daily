@@ -2,7 +2,7 @@
   <div class="echart-main">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span class="echart-tit">{{titName}}消费统计图</span>
+        <span class="echart-tit">{{titName}}{{$t('echartTxt.tit')}}</span>
       </div>
       <div class="text item">
         <div id="myChart" :style="{width:'100%', height:'400px'}"></div>
@@ -15,7 +15,10 @@
         <span class="fl">金额大于：</span>
         <el-input-number v-model="priceNum" controls-position="right" :min="1" :step="100" :max="1000"></el-input-number>
       </div>
-      <el-table :data="gridData" :rowClassName = "fnRowClass">
+      <el-table :data="gridData"
+                :summary-method="getSummaries"
+                show-summary
+                :rowClassName = "fnRowClass">
         <el-table-column
           prop="cost_date"
           label="日期">
@@ -362,6 +365,32 @@
         console.log(row.price)
         return row.price > this.priceNum ? "csbsTypes" :""
       },
+      getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总价';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] = (sums[index]).toFixed(2) + ' 元';
+          } else {
+            sums[index] = 'N/A';
+          }
+        });
+
+        return sums;
+      }
     }
   }
 </script>
@@ -383,5 +412,8 @@
 <style lang="less">
   .el-table .csbsTypes td{
     background-color: rgba(255, 244, 209, 0.62) !important;
+  }
+  .el-table__footer .has-gutter td{
+    background-color: #d9d9d9;
   }
 </style>
