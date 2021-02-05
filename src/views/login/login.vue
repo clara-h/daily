@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import md5 from "js-md5";
+
 export default {
   name: "login",
   data() {
@@ -81,7 +83,7 @@ export default {
           let url = "/login";
           let params = {
             name:this.loginForm.name,
-            pwd:this.loginForm.pass,
+            pwd: md5(md5(this.loginForm.pass).toLocaleLowerCase()).toLocaleLowerCase()
           };
           //->调用第一个接口的请求服务
           //debugger;

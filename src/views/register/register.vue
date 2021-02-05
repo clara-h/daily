@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import md5 from 'js-md5'
 export default {
   name: "register",
   data() {
@@ -85,9 +86,12 @@ export default {
           //this.systemTime = date.year + '-' + date.month + '-' + date.date
           let th = this;
           let url = "/register";
+          let pwd = md5(md5(this.signForm.pwd).toLocaleLowerCase()).toLocaleLowerCase()
+          console.log(pwd)
+          console.log(pwd.length)
           let params = {
             name: this.signForm.name,
-            pwd: this.signForm.pwd,
+            pwd: md5(md5(this.signForm.pwd).toLocaleLowerCase()).toLocaleLowerCase(),
             time: date.year + '-' + date.month + '-' + date.date,
           };
           //->调用第一个接口的请求服务
