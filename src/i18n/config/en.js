@@ -16,20 +16,20 @@ const en = {
     chinese: 'chinese',
     english: 'english'
   },
-  topNav:{
+  topNav: {
     class: 'Class',
     type: 'Type',
     center: 'Personal Center',
     signOut: 'Sign Out'
   },
-  leftMenu:{
+  leftMenu: {
     home: 'Home'
   },
-  indexTxt:{
+  indexTxt: {
     infoName: 'Total consumption',
     detailBtn: 'Detail',
     echartBtn: 'Chart',
-    money: 'yuan'
+    money: '￥'
   },
   costSearch: {
     keyWord: 'keyword',
@@ -64,7 +64,20 @@ const en = {
   },
   echartTxt: {
     tit: 'Consumption chart',
-    costName: '',
+    costName: 'Consumption details',
+    searchTxt: 'Amount greater than',
+    echartTit: 'Total ',
+    totalPrice: 'Total Price',
+    money: '￥'
+  },
+  perconCenter: {
+    tit: 'Percon Center',
+    changePwd: 'Change Password',
+    enable: 'enable',
+    disable: 'disable',
+    name: 'Name',
+    time: 'Create Time',
+    state: 'State'
   },
 
 }

@@ -10,9 +10,9 @@
       </div>
     </el-card>
 
-    <el-dialog title="消费详情" :visible.sync="dialogTableVisible" width="80%">
+    <el-dialog :title="$t('echartTxt.costName')" :visible.sync="dialogTableVisible" width="80%">
       <div class="clearfix top-search">
-        <span class="fl">金额大于：</span>
+        <span class="fl">{{$t('echartTxt.searchTxt')}}：</span>
         <el-input-number v-model="priceNum" controls-position="right" :min="1" :step="100" :max="1000"></el-input-number>
       </div>
       <el-table :data="gridData"
@@ -21,27 +21,27 @@
                 :rowClassName = "fnRowClass">
         <el-table-column
           prop="cost_date"
-          label="日期">
+          :label="$t('tableTxt.date')">
         </el-table-column>
         <el-table-column
           prop="cost_name"
-          label="名称">
+          :label="$t('tableTxt.name')">
         </el-table-column>
         <el-table-column
           prop="class_name"
-          label="类型">
+          :label="$t('tableTxt.type')">
         </el-table-column>
         <el-table-column
           prop="price"
-          label="费用">
+          :label="$t('tableTxt.price')">
         </el-table-column>
         <el-table-column
           prop="cost_time"
-          label="时间">
+          :label="$t('tableTxt.time')">
         </el-table-column>
         <el-table-column
           prop="cost_info"
-          label="说明"
+          :label="$t('tableTxt.info')"
           show-overflow-tooltip>
         </el-table-column>
       </el-table>
@@ -191,8 +191,8 @@
         if(data==null){
           return;
         }
-        var sum =0,n=0;
-        for(var i=0;i<data.length;i++){
+        let sum =0,n=0;
+        for(let i=0;i<data.length;i++){
           if(i===0) {
             //this.rowIndex.push(n);
             this.daily[i]=data[i].cost_date;
@@ -214,9 +214,9 @@
         }
         console.log(this.daily);
         console.log(this.allPrice);
-        for (var i =0; i<this.allPrice.length; i++) {
-          this.allPrice[i] = (this.allPrice[i]).toFixed(2)
-        }
+        this.allPrice.forEach((value,i) => {
+          this.allPrice[i] = value.toFixed(2)
+        })
         this.dailyLine(this.daily,this.allPrice,this);
       },
       //获取图表需要的数据
@@ -259,7 +259,7 @@
               type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
             },
             formatter: function (params) {
-              return params[0].name + '<br>'+params[0].seriesName+":"+params[0].data+'元';
+              return params[0].name + '<br>'+params[0].seriesName+":"+params[0].data+'￥';
             }
           },
           xAxis: {
@@ -272,7 +272,7 @@
           yAxis: {},
           series: [
             {
-              name: '总消费',
+              name: this.$t('echartTxt.echartTit'),
               type: 'bar',
               data: yData,
               markPoint: {
@@ -296,7 +296,7 @@
               }
             },
             {
-              name: '总消费',
+              name: this.$t('echartTxt.echartTit'),
               type: 'line',
               data: yData,
             },
@@ -329,7 +329,7 @@
           },
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b} : {c}元  ({d}%)'
+            formatter: '{a} <br/>{b} : {c}￥  ({d}%)'
           },
           legend: {
             orient: 'vertical',
@@ -338,7 +338,7 @@
           },
           series: [
             {
-              name: '总消费',
+              name: this.$t('echartTxt.echartTit'),
               type: 'pie',
               radius: '55%',
               center: ['50%', '60%'],
@@ -370,7 +370,7 @@
         const sums = [];
         columns.forEach((column, index) => {
           if (index === 0) {
-            sums[index] = '总价';
+            sums[index] = this.$t('echartTxt.totalPrice');
             return;
           }
           const values = data.map(item => Number(item[column.property]));
@@ -383,7 +383,7 @@
                 return prev;
               }
             }, 0);
-            sums[index] = (sums[index]).toFixed(2) + ' 元';
+            sums[index] = (sums[index]).toFixed(2) + ' ' + this.$t('echartTxt.money');
           } else {
             sums[index] = 'N/A';
           }

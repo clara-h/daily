@@ -66,7 +66,20 @@ const zh = {
   },
   echartTxt: {
     tit: '消费统计',
-    costName: '',
+    costName: '消费详情',
+    searchTxt: '金额大于',
+    echartTit: '总消费 ',
+    totalPrice: '总价',
+    money: '元',
+  },
+  perconCenter: {
+    tit: '个人中心',
+    changePwd: '修改密码',
+    enable: '启用',
+    disable: '禁用',
+    name: '名称',
+    time: '创建时间',
+    state: '状态'
   },
 }
 export default zh
