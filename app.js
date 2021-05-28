@@ -149,13 +149,14 @@ app.post("/editType", bodyParser.json(),(req, res) => {
   var name = req.body.name;
   var info = req.body.info;
   var time = req.body.time;
+  var typeTime = req.body.typeTime;
   var sql;
   if (id){
     console.log("编辑");
-    sql = "UPDATE type SET type_name = '"+name+"',type_info='"+info+"' where type_id = '"+id+"'";
+    sql = "UPDATE type SET type_name = '"+name+"',type_info='"+info+"',type_time='"+typeTime+"' where type_id = '"+id+"'";
   }else{
     console.log("添加");
-    sql = "INSERT INTO type (type_name,type_time,type_info,user_id) VALUES ('"+name+"','"+time+"','"+info+"','"+userId+"')";
+    sql = "INSERT INTO type (type_name,type_time,type_info,user_id,create_time) VALUES ('"+name+"','"+typeTime+"','"+info+"','"+userId+"','"+time+"')";
   }
   conn.query(sql, function (err, result) {
     var data = {};

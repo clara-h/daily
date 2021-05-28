@@ -7,7 +7,7 @@
             <span class="fl">{{item.type_name}}</span>
           </div>
           <div class="sum">
-            {{$t('indexTxt.infoName')}}：<b>{{allPrice[index]}}</b> {{$t('indexTxt.money')}}
+            {{$t('indexTxt.infoName')}}：<b>{{item.allPrice}}</b> {{$t('indexTxt.money')}}
             <div class="link-btn">
               <el-button size="mini" @click="linkDetail(item.type_id)">{{$t('indexTxt.detailBtn')}}</el-button>
               <el-button size="mini" @click="linkChart(item.type_id)">{{$t('indexTxt.echartBtn')}}</el-button>
@@ -47,14 +47,20 @@
         this.reqM1Service(url, params).then(
           res => {
             if(res.code === 200){
-              console.log(res.data);
               let sum = 0;
               for(var i =0; i<res.data.length; i++){
                 sum += res.data[i].price;
               }
-              this.allPrice.push((sum).toFixed(2));
+              this.titList.forEach(val => {
+                if (val.type_id === id) {
+                  val.allPrice = sum.toFixed(2)
+                }
+              })
+              console.log(this.titList)
+              this.$forceUpdate()
+              // this.allPrice.push((sum).toFixed(2));
               //console.log(id);
-              console.log(this.allPrice);
+              // console.log(this.allPrice);
             } else {
               th.$message.error(res.msg);
             }

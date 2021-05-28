@@ -37,6 +37,11 @@
           </el-table-column>
           <el-table-column
             prop="type_time"
+            label="统计月份"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="create_time"
             label="创建时间"
             width="180">
           </el-table-column>
@@ -65,6 +70,14 @@
       <el-form :model="dialogForm" class="textLeft" ref="dialogForm" :rules="rules">
         <el-form-item label="名称" label-width="80px" prop="name">
           <el-input v-model.trim="dialogForm.name" autocomplete="off" class="widthName"></el-input>
+        </el-form-item>
+        <el-form-item label="月份" label-width="80px" prop="time">
+          <el-date-picker
+            v-model="dialogForm.time"
+            type="month"
+            autocomplete="off"
+            placeholder="选择月">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="说明" label-width="80px" prop="loginName">
           <el-input
@@ -103,7 +116,8 @@
           userId: this.$store.state.login.id,
           id: '',
           name:'',
-          info:''
+          info:'',
+          time: '',
         },
         ids:[],//要删除的id
         rules: {
@@ -137,7 +151,7 @@
         console.log(this.ids)
         return this.ids;
       },
-      submitForm(formName) {//查询提交
+      submitForm(formName) { //查询提交
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let th = this;
@@ -153,8 +167,9 @@
                   console.log(res.data);
                   th.tableData = res.data;
                   for(var i =0; i<res.data.length+1; i++){
-                    th.tableData[i].type_time = th.$moment(th.tableData[i].type_time).format('YYYY-MM-DD HH:mm:ss');
-                    //console.log(th.tableData[i].type_time);
+                    th.tableData[i].create_time = th.$moment(th.tableData[i].create_time).format('YYYY-MM-DD HH:mm:ss');
+                    th.tableData[i].type_time = th.$moment(th.tableData[i].type_time).format('YYYY-MM');
+                    console.log(th.tableData[i].create_time);
                   }
                   th.tableData = res.data;
                 } else {
@@ -189,6 +204,7 @@
         this.dialogForm.id='';
         this.dialogForm.info= '';
         this.dialogForm.name='';
+        this.dialogForm.time = '';
         this.$nextTick(() => {//清除element残留表单校 验
           this.$refs.dialogForm.clearValidate()
         });
@@ -200,6 +216,7 @@
         this.dialogForm.name = value.type_name;
         this.dialogForm.info = value.type_info;
         this.dialogForm.id = value.type_id;
+        this.dialogForm.time = value.type_time;
         this.$nextTick(() => {//清除element残留表单校 验
           this.$refs.dialogForm.clearValidate()
         });
@@ -215,6 +232,7 @@
               userId: this.dialogForm.userId,
               name: this.dialogForm.name,
               info: this.dialogForm.info,
+              typeTime: th.$moment(this.dialogForm.time).format('YYYY-MM-DD'),
               time: this.formatDateTime(new Date())
             };
             console.log(params)
